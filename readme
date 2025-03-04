@@ -1,5 +1,6 @@
 Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
 venv\Scripts\Activate
+uvicorn app.src.main:app --reload
 
 docker pull python:3.11
 docker build -t fastapi-app .
