@@ -27,11 +27,17 @@ jobs:
 
       - name: Package Application
         run: |
-          rm -rf temp_package  # Ensure previous package folder is removed
+          rm -rf temp_package  # Remove existing temp folder
           mkdir temp_package
-          rsync -av --exclude=temp_package --exclude=venv --exclude=deployment-package.zip . temp_package/
+
+          # Install dependencies inside temp_package
+          pip install --target temp_package -r requirements.txt
+
+          # Copy the application source code
+          cp -r app temp_package/  
+
           cd temp_package
-          zip -r ../deployment-package.zip .
+          zip -r ../deployment-package.zip .  # Create ZIP package
           cd ..
 
       - name: Configure AWS Credentials
@@ -44,4 +50,3 @@ jobs:
       - name: Deploy to AWS Lambda
         run: |
           aws lambda update-function-code --function-name fastapi-lambda --zip-file fileb://deployment-package.zip
-
