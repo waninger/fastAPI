@@ -33,7 +33,7 @@ jobs:
           zip -r ../deployment-package.zip .
 
       - name: Deploy to AWS Lambda
-        uses: aws-actions/aws-lambda-deploy@v1
+        uses: aws-actions/aws-lambda-update-function-code@v1
         with:
           function-name: "fastapi-lambda"
           zip-file: "deployment-package.zip"
