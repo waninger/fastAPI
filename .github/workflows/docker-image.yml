@@ -14,7 +14,9 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
+
+    - name: Pull the Python image
+      run: docker pull python:3.11
+      
     - name: Build the Docker image
-      run: 
-        docker pull python:3.11 
-        docker build -t fastapi-app:$(date +%s) .
+      run: docker build -t fastapi-app:$(date +%s) .
