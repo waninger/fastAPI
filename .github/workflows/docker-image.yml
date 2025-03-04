@@ -17,4 +17,4 @@ jobs:
     - name: Build the Docker image
       run: 
         docker pull python:3.11 
-        docker build . --file Dockerfile --tag fastapi-app:$(date +%s)
+        docker build -t fastapi-app:$(date +%s) .
