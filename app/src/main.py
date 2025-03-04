@@ -1,6 +1,7 @@
 from fastapi import FastAPI, Depends, HTTPException, Security
 from fastapi.security.api_key import APIKeyHeader
 from mangum import Mangum
+from fastapi.middleware.cors import CORSMiddleware
 from app.src.modules.recipes import Recepies
 
 
@@ -11,6 +12,13 @@ API_KEY = "supersecretapikey123"  # Change this!
 API_KEY_NAME = "X-API-Key"
 api_key_header = APIKeyHeader(name=API_KEY_NAME, auto_error=True)
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  
+    allow_credentials=True,
+    allow_methods=["*"],  
+    allow_headers=["*"], 
+)
 
 def validate_api_key(api_key: str = Security(api_key_header)):
     if api_key != API_KEY:
@@ -21,12 +29,12 @@ def validate_api_key(api_key: str = Security(api_key_header)):
 def read_root(api_key: str = Depends(validate_api_key)):
     return {"message": "Hello, Authenticated User!"}
 
-#@app.get("/recipe")
-# def get_resepi(api_key: str = Depends(validate_api_key)):
-#    recipes_instance = Recepies()
-#    return recipes_instance.getRandom()
-
 @app.get("/recipe")
+def get_resepi(api_key: str = Depends(validate_api_key)):
+    recipes_instance = Recepies()
+    return recipes_instance.getRandom()
+
+@app.get("/recipe_no_key")
 def get_recipe():
     recipes_instance = Recepies()
     return recipes_instance.getRandom()
