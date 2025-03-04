@@ -17,6 +17,14 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: "3.11"
+          
+      - name: Install Dependencies
+        run: |
+          python -m venv venv
+          source venv/bin/activate
+          pip install --upgrade pip
+          pip install -r requirements.txt
+          mkdir temp_package
 
       - name: Package Application
         run: |
@@ -25,14 +33,6 @@ jobs:
             cd temp_package
             zip -r ../deployment-package.zip .
             cd ..
-
-
-      - name: Package Application
-        run: |
-          mkdir package
-          rsync -av --exclude=package . package/
-          cd package
-          zip -r ../deployment-package.zip .
 
 
       - name: Configure AWS Credentials
