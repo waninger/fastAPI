@@ -3,7 +3,7 @@ name: Deploy FastAPI to AWS Lambda
 on:
   push:
     branches:
-      - main  # Runs only when pushing to the main branch
+      - main 
 
 jobs:
   deploy:
@@ -27,19 +27,26 @@ jobs:
 
       - name: Package Application
         run: |
-          mkdir package
-          rsync -av --exclude=package . package/
-          cd package
-          zip -r ../deployment-package.zip .
+          rm -rf temp_package  # Remove existing temp folder
+          mkdir temp_package
 
+          # Install dependencies inside temp_package
+          pip install --target temp_package -r requirements.txt
+
+          # Copy the application source code
+          cp -r app temp_package/  
+
+          cd temp_package
+          zip -r ../deployment-package.zip .  # Create ZIP package
+          cd ..
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: "eu-north-1"  # Replace with your actual AWS region
+          aws-region: "eu-north-1"
 
-      - name: Deploy to AWS Lambda using AWS CLI
+      - name: Deploy to AWS Lambda
         run: |
           aws lambda update-function-code --function-name fastapi-lambda --zip-file fileb://deployment-package.zip
