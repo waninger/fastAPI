@@ -18,12 +18,14 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: Install Dependencies
+      - name: Package Application
         run: |
-          python -m venv venv
-          source venv/bin/activate
-          pip install --upgrade pip
-          pip install -r requirements.txt
+            mkdir temp_package
+            rsync -av --exclude=temp_package --exclude=venv --exclude=deployment-package.zip . temp_package/
+            cd temp_package
+            zip -r ../deployment-package.zip .
+            cd ..
+
 
       - name: Package Application
         run: |
