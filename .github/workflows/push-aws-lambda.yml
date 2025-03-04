@@ -28,7 +28,7 @@ jobs:
       - name: Package Application
         run: |
           mkdir package
-          cp -r !(package) package/  # Exclude the 'package' folder
+          rsync -av --exclude=package . package/
           cd package
           zip -r ../deployment-package.zip .
 
