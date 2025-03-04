@@ -28,9 +28,10 @@ jobs:
       - name: Package Application
         run: |
           mkdir package
-          cp -r * package
+          cp -r !(package) package/  # Exclude the 'package' folder
           cd package
           zip -r ../deployment-package.zip .
+
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
