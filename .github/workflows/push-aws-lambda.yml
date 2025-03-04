@@ -28,11 +28,13 @@ jobs:
 
       - name: Package Application
         run: |
+            rm -rf temp_package  # Remove the directory if it exists
             mkdir temp_package
             rsync -av --exclude=temp_package --exclude=venv --exclude=deployment-package.zip . temp_package/
             cd temp_package
             zip -r ../deployment-package.zip .
             cd ..
+
 
 
       - name: Configure AWS Credentials
